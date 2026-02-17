@@ -49,6 +49,43 @@ python rag_pipeline_eval_v2.py query --question "Your question here"
 # Re-run batch evaluation
 .\evaluate_v2.ps1
 ```
+### Setup Scripts
+
+#### `setup_v1.ps1` / `setup_v2.ps1`
+
+**What it does:**
+1. ✅ Verifies Python 3.12 is installed
+2. ✅ Creates project directories
+3. ✅ Creates virtual environment
+4. ✅ Installs dependencies from requirements.txt
+5. ✅ Verifies FAISS installation
+6. ✅ Runs `run_all` (ingests docs, creates chunks, builds FAISS index)
+7. ✅ Runs `batch` (evaluates predefined questions)
+
+**When to run:**
+- First time setup
+- After adding new documents to `data/raw/`
+- After modifying chunking or indexing settings
+
+**Run time:** 5-15 minutes (depending on corpus size)
+
+### Evaluation Scripts
+
+#### `evaluate_v1.ps1` / `evaluate_v2.ps1`
+
+**What it does:**
+1. ✅ Verifies index exists
+2. ✅ Activates virtual environment
+3. ✅ Runs batch evaluation questions
+4. ✅ Shows results summary
+
+**When to run:**
+- After modifying prompts or thresholds
+- To re-test questions without rebuilding index
+- To compare v1 vs v2 metrics
+
+**Run time:** 1-5 minutes
+
 
 ## How It Works
 
