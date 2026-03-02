@@ -1,0 +1,1387 @@
+Claim,Evidence,Source,Chunk_ID,Confidence,Notes
+FActScore measures factual precision by evaluating the accuracy of atomic facts supported by a given knowledge source .,"0 20 40 60 80
+Est. FActScore (%)StableLM 7BDolly 12BOasst-pythia 12BMPT-Chat 7BVicuna 7BAlpaca 7BVicuna 13BAlpaca 13BInstructGPTAlpaca 65BChatGPTGPT4HumanBased on F1 micro",S02.pdf,S02-8f3f8b91-ddac-4789-a6ab-406641d7784b-sec-0,0.454,
+It decomposes text into atomic facts (short sentences conveying one piece of information) and assesses whether each fact is supported by the provided knowledge source .,"3.1 Definition
+FACTSCORE is based on two key ideas.
+Key idea 1: Atomic fact as a unit. Long-form
+text consists of many pieces of information that can
+each be either true or false. Prior work has explored
+using a sentence as a unit; however, even a single
+sentence is a mix of supported and unsupported
+facts, e.g., in 40% of the cases with ChatGPT. Pre-
+vious and concurrent work either (1) defines an
+additional label of partial support (Manakul
+et al., 2023; Liu et al., 2023a) whose definition
+may be subjective and can lead to low agreement,
+or (2) takes the strictest definition of support
+that requires every piece of information to be sup-
+ported (Rashkin et al., 2021; Gao et al., 2022),
+which ignores the partial support cases, e.g., as-
+signing 0.0 to both generations in Figure 1 even
+though the first generation is considerably more
+accurate than the second.
+In this paper, we define an atomic fact as a short
+sentence conveying one piece of information (ex-
+amples in Figure 1), similar to summarization con-
+tent units (Nenkova and Passonneau, 2004). An
+atomic fact is a more fundamental unit than a sen-
+tence for a piece of information and provides a
+more fine-grained evaluation, e.g., in Figure 1, rat-ing the first generation higher than the second.
+Key Idea 2: Factual precision as a function of a
+given knowledge source. Prior work often consid-
+ers factual precision as a single global truth (Man-
+akul et al., 2023). In contrast, we adopt a per-
+spective that the truthfulness of a statement should
+depend on a particular knowledge source that end
+users consider to be trustworthy and reliable. There-
+fore, instead of whether an atomic fact is globally
+true or false, we consider whether it is supported by
+a given source of knowledge. This has been used in
+the fact verification literature (Wadden et al., 2022)
+where conflict of information between different
+sources is relatively common.
+Definition. LetMbe a language model to be eval-
+uated,Xbe a set of prompts, and Cbe a knowledge
+source. Consider a response y=Mxforx∈ X
+andAy, a list of atomic facts in y. AFACTSCORE
+ofMis defined as follows.
+f(y) =1
+|Ay|X
+a∈AyI[ais supported by C],
+FACTSCORE (M) =Ex∈X[f(Mx)|Mxresponds ].
+Mxresponds means Mdid not abstain from re-
+sponding to the prompt x. This definition assumes
+the following:
+1.Whether or not an atomic fact is supported by
+Cis undebatable.
+2.Every atomic fact in Ayhas an equal weight of
+importance, following Krishna et al. (2023).
+3.Pieces of information in Cdo not conflict or
+overlap with each other.
+In the rest of the paper, we propose to use people
+biographies as Xand Wikipedia as Cbecause they
+satisfy these assumptions to a reasonable degree
+(Section 3.3). We discuss in which cases these
+assumptions hold or may not hold in more detail in
+the Limitation section.
+FACTSCORE considers precision but not recall ,
+e.g., a model that abstains from answering too often
+or generates text with fewer facts may have a higher
+FACTSCORE , even if these are not desired. We
+leave the evaluation of factual recall for future work
+(more discussion in the Limitation section).",S02.pdf,S02-8f3f8b91-ddac-4789-a6ab-406641d7784b-sec-1,0.452,
+"The metric calculates the proportion of atomic facts supported by the source, reflecting the model's ability to align with reliable knowledge .","3.1 Definition
+FACTSCORE is based on two key ideas.
+Key idea 1: Atomic fact as a unit. Long-form
+text consists of many pieces of information that can
+each be either true or false. Prior work has explored
+using a sentence as a unit; however, even a single
+sentence is a mix of supported and unsupported
+facts, e.g., in 40% of the cases with ChatGPT. Pre-
+vious and concurrent work either (1) defines an
+additional label of partial support (Manakul
+et al., 2023; Liu et al., 2023a) whose definition
+may be subjective and can lead to low agreement,
+or (2) takes the strictest definition of support
+that requires every piece of information to be sup-
+ported (Rashkin et al., 2021; Gao et al., 2022),
+which ignores the partial support cases, e.g., as-
+signing 0.0 to both generations in Figure 1 even
+though the first generation is considerably more
+accurate than the second.
+In this paper, we define an atomic fact as a short
+sentence conveying one piece of information (ex-
+amples in Figure 1), similar to summarization con-
+tent units (Nenkova and Passonneau, 2004). An
+atomic fact is a more fundamental unit than a sen-
+tence for a piece of information and provides a
+more fine-grained evaluation, e.g., in Figure 1, rat-ing the first generation higher than the second.
+Key Idea 2: Factual precision as a function of a
+given knowledge source. Prior work often consid-
+ers factual precision as a single global truth (Man-
+akul et al., 2023). In contrast, we adopt a per-
+spective that the truthfulness of a statement should
+depend on a particular knowledge source that end
+users consider to be trustworthy and reliable. There-
+fore, instead of whether an atomic fact is globally
+true or false, we consider whether it is supported by
+a given source of knowledge. This has been used in
+the fact verification literature (Wadden et al., 2022)
+where conflict of information between different
+sources is relatively common.
+Definition. LetMbe a language model to be eval-
+uated,Xbe a set of prompts, and Cbe a knowledge
+source. Consider a response y=Mxforx∈ X
+andAy, a list of atomic facts in y. AFACTSCORE
+ofMis defined as follows.
+f(y) =1
+|Ay|X
+a∈AyI[ais supported by C],
+FACTSCORE (M) =Ex∈X[f(Mx)|Mxresponds ].
+Mxresponds means Mdid not abstain from re-
+sponding to the prompt x. This definition assumes
+the following:
+1.Whether or not an atomic fact is supported by
+Cis undebatable.
+2.Every atomic fact in Ayhas an equal weight of
+importance, following Krishna et al. (2023).
+3.Pieces of information in Cdo not conflict or
+overlap with each other.
+In the rest of the paper, we propose to use people
+biographies as Xand Wikipedia as Cbecause they
+satisfy these assumptions to a reasonable degree
+(Section 3.3). We discuss in which cases these
+assumptions hold or may not hold in more detail in
+the Limitation section.
+FACTSCORE considers precision but not recall ,
+e.g., a model that abstains from answering too often
+or generates text with fewer facts may have a higher
+FACTSCORE , even if these are not desired. We
+leave the evaluation of factual recall for future work
+(more discussion in the Limitation section).",S02.pdf,S02-8f3f8b91-ddac-4789-a6ab-406641d7784b-sec-1,0.452,
+"Known failure modes include: (1) models that abstain from responding to prompts (e.g., ChatGPT) may achieve higher FACTSCORE due to lack of response, even if it reduces accuracy .","3.1 Definition
+FACTSCORE is based on two key ideas.
+Key idea 1: Atomic fact as a unit. Long-form
+text consists of many pieces of information that can
+each be either true or false. Prior work has explored
+using a sentence as a unit; however, even a single
+sentence is a mix of supported and unsupported
+facts, e.g., in 40% of the cases with ChatGPT. Pre-
+vious and concurrent work either (1) defines an
+additional label of partial support (Manakul
+et al., 2023; Liu et al., 2023a) whose definition
+may be subjective and can lead to low agreement,
+or (2) takes the strictest definition of support
+that requires every piece of information to be sup-
+ported (Rashkin et al., 2021; Gao et al., 2022),
+which ignores the partial support cases, e.g., as-
+signing 0.0 to both generations in Figure 1 even
+though the first generation is considerably more
+accurate than the second.
+In this paper, we define an atomic fact as a short
+sentence conveying one piece of information (ex-
+amples in Figure 1), similar to summarization con-
+tent units (Nenkova and Passonneau, 2004). An
+atomic fact is a more fundamental unit than a sen-
+tence for a piece of information and provides a
+more fine-grained evaluation, e.g., in Figure 1, rat-ing the first generation higher than the second.
+Key Idea 2: Factual precision as a function of a
+given knowledge source. Prior work often consid-
+ers factual precision as a single global truth (Man-
+akul et al., 2023). In contrast, we adopt a per-
+spective that the truthfulness of a statement should
+depend on a particular knowledge source that end
+users consider to be trustworthy and reliable. There-
+fore, instead of whether an atomic fact is globally
+true or false, we consider whether it is supported by
+a given source of knowledge. This has been used in
+the fact verification literature (Wadden et al., 2022)
+where conflict of information between different
+sources is relatively common.
+Definition. LetMbe a language model to be eval-
+uated,Xbe a set of prompts, and Cbe a knowledge
+source. Consider a response y=Mxforx∈ X
+andAy, a list of atomic facts in y. AFACTSCORE
+ofMis defined as follows.
+f(y) =1
+|Ay|X
+a∈AyI[ais supported by C],
+FACTSCORE (M) =Ex∈X[f(Mx)|Mxresponds ].
+Mxresponds means Mdid not abstain from re-
+sponding to the prompt x. This definition assumes
+the following:
+1.Whether or not an atomic fact is supported by
+Cis undebatable.
+2.Every atomic fact in Ayhas an equal weight of
+importance, following Krishna et al. (2023).
+3.Pieces of information in Cdo not conflict or
+overlap with each other.
+In the rest of the paper, we propose to use people
+biographies as Xand Wikipedia as Cbecause they
+satisfy these assumptions to a reasonable degree
+(Section 3.3). We discuss in which cases these
+assumptions hold or may not hold in more detail in
+the Limitation section.
+FACTSCORE considers precision but not recall ,
+e.g., a model that abstains from answering too often
+or generates text with fewer facts may have a higher
+FACTSCORE , even if these are not desired. We
+leave the evaluation of factual recall for future work
+(more discussion in the Limitation section).",S02.pdf,S02-8f3f8b91-ddac-4789-a6ab-406641d7784b-sec-1,0.452,
+"(2) Strict definitions (e.g., requiring every fact to be supported) may overlook partial support, leading to inconsistent evaluations .","3.1 Definition
+FACTSCORE is based on two key ideas.
+Key idea 1: Atomic fact as a unit. Long-form
+text consists of many pieces of information that can
+each be either true or false. Prior work has explored
+using a sentence as a unit; however, even a single
+sentence is a mix of supported and unsupported
+facts, e.g., in 40% of the cases with ChatGPT. Pre-
+vious and concurrent work either (1) defines an
+additional label of partial support (Manakul
+et al., 2023; Liu et al., 2023a) whose definition
+may be subjective and can lead to low agreement,
+or (2) takes the strictest definition of support
+that requires every piece of information to be sup-
+ported (Rashkin et al., 2021; Gao et al., 2022),
+which ignores the partial support cases, e.g., as-
+signing 0.0 to both generations in Figure 1 even
+though the first generation is considerably more
+accurate than the second.
+In this paper, we define an atomic fact as a short
+sentence conveying one piece of information (ex-
+amples in Figure 1), similar to summarization con-
+tent units (Nenkova and Passonneau, 2004). An
+atomic fact is a more fundamental unit than a sen-
+tence for a piece of information and provides a
+more fine-grained evaluation, e.g., in Figure 1, rat-ing the first generation higher than the second.
+Key Idea 2: Factual precision as a function of a
+given knowledge source. Prior work often consid-
+ers factual precision as a single global truth (Man-
+akul et al., 2023). In contrast, we adopt a per-
+spective that the truthfulness of a statement should
+depend on a particular knowledge source that end
+users consider to be trustworthy and reliable. There-
+fore, instead of whether an atomic fact is globally
+true or false, we consider whether it is supported by
+a given source of knowledge. This has been used in
+the fact verification literature (Wadden et al., 2022)
+where conflict of information between different
+sources is relatively common.
+Definition. LetMbe a language model to be eval-
+uated,Xbe a set of prompts, and Cbe a knowledge
+source. Consider a response y=Mxforx∈ X
+andAy, a list of atomic facts in y. AFACTSCORE
+ofMis defined as follows.
+f(y) =1
+|Ay|X
+a∈AyI[ais supported by C],
+FACTSCORE (M) =Ex∈X[f(Mx)|Mxresponds ].
+Mxresponds means Mdid not abstain from re-
+sponding to the prompt x. This definition assumes
+the following:
+1.Whether or not an atomic fact is supported by
+Cis undebatable.
+2.Every atomic fact in Ayhas an equal weight of
+importance, following Krishna et al. (2023).
+3.Pieces of information in Cdo not conflict or
+overlap with each other.
+In the rest of the paper, we propose to use people
+biographies as Xand Wikipedia as Cbecause they
+satisfy these assumptions to a reasonable degree
+(Section 3.3). We discuss in which cases these
+assumptions hold or may not hold in more detail in
+the Limitation section.
+FACTSCORE considers precision but not recall ,
+e.g., a model that abstains from answering too often
+or generates text with fewer facts may have a higher
+FACTSCORE , even if these are not desired. We
+leave the evaluation of factual recall for future work
+(more discussion in the Limitation section).",S02.pdf,S02-8f3f8b91-ddac-4789-a6ab-406641d7784b-sec-1,0.452,
+"(3) Assumptions about knowledge sources (e.g., no conflicts or overlaps) may not hold in real-world scenarios, undermining the metric's validity .","3.1 Definition
+FACTSCORE is based on two key ideas.
+Key idea 1: Atomic fact as a unit. Long-form
+text consists of many pieces of information that can
+each be either true or false. Prior work has explored
+using a sentence as a unit; however, even a single
+sentence is a mix of supported and unsupported
+facts, e.g., in 40% of the cases with ChatGPT. Pre-
+vious and concurrent work either (1) defines an
+additional label of partial support (Manakul
+et al., 2023; Liu et al., 2023a) whose definition
+may be subjective and can lead to low agreement,
+or (2) takes the strictest definition of support
+that requires every piece of information to be sup-
+ported (Rashkin et al., 2021; Gao et al., 2022),
+which ignores the partial support cases, e.g., as-
+signing 0.0 to both generations in Figure 1 even
+though the first generation is considerably more
+accurate than the second.
+In this paper, we define an atomic fact as a short
+sentence conveying one piece of information (ex-
+amples in Figure 1), similar to summarization con-
+tent units (Nenkova and Passonneau, 2004). An
+atomic fact is a more fundamental unit than a sen-
+tence for a piece of information and provides a
+more fine-grained evaluation, e.g., in Figure 1, rat-ing the first generation higher than the second.
+Key Idea 2: Factual precision as a function of a
+given knowledge source. Prior work often consid-
+ers factual precision as a single global truth (Man-
+akul et al., 2023). In contrast, we adopt a per-
+spective that the truthfulness of a statement should
+depend on a particular knowledge source that end
+users consider to be trustworthy and reliable. There-
+fore, instead of whether an atomic fact is globally
+true or false, we consider whether it is supported by
+a given source of knowledge. This has been used in
+the fact verification literature (Wadden et al., 2022)
+where conflict of information between different
+sources is relatively common.
+Definition. LetMbe a language model to be eval-
+uated,Xbe a set of prompts, and Cbe a knowledge
+source. Consider a response y=Mxforx∈ X
+andAy, a list of atomic facts in y. AFACTSCORE
+ofMis defined as follows.
+f(y) =1
+|Ay|X
+a∈AyI[ais supported by C],
+FACTSCORE (M) =Ex∈X[f(Mx)|Mxresponds ].
+Mxresponds means Mdid not abstain from re-
+sponding to the prompt x. This definition assumes
+the following:
+1.Whether or not an atomic fact is supported by
+Cis undebatable.
+2.Every atomic fact in Ayhas an equal weight of
+importance, following Krishna et al. (2023).
+3.Pieces of information in Cdo not conflict or
+overlap with each other.
+In the rest of the paper, we propose to use people
+biographies as Xand Wikipedia as Cbecause they
+satisfy these assumptions to a reasonable degree
+(Section 3.3). We discuss in which cases these
+assumptions hold or may not hold in more detail in
+the Limitation section.
+FACTSCORE considers precision but not recall ,
+e.g., a model that abstains from answering too often
+or generates text with fewer facts may have a higher
+FACTSCORE , even if these are not desired. We
+leave the evaluation of factual recall for future work
+(more discussion in the Limitation section).",S02.pdf,S02-8f3f8b91-ddac-4789-a6ab-406641d7784b-sec-1,0.452,
+"The AIS (Attribution of Standalone Propositions) framework defines a fully attributable statement through three key components:  
+1.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"**The ""according to"" test**: This test determines if a proposition is attributable by verifying if its meaning is consistent with the context.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"**Interpretability**: The framework emphasizes how interpretable system output is for human annotators, distinguishing it from terms like ""meaningful"" or ""sensibleness.""   
+3.","3.1 An Initial Deﬁnition of AIS: Attribution of Standalone Propositions
+We now give a deﬁnition of AIS for a simple but important case, where the text in
+question is a standalone proposition . We in general assume a setting where AIS is to
+be determined for a string whose meaning is ascertained relative to a context. In the
+following treatment we assume that time is the only non-linguistic aspect of context
+relevant to determining textual meaning, modeling a setting where two generic speak-
+ers communicate over a text-based channel, with no additional prior information about
+each other.3
+2We acknowledge that the term “interpretability” has come to signify “model interpretability” in the NLP
+and ML community (as established in Harrington et al. (1985), Ribeiro, Singh, and Guestrin (2016)). The
+term in our use represents how interpretable system output is for a human annotator. The choice of
+terminology is intended to be more conceptually transparent when used by annotators: unlike other
+terms like “meaningful”/“nonsensical” (Durmus, He, and Diab 2020), or “sensibleness” (Adiwardana
+et al. 2020), “interpretability” more readily alludes to the signiﬁcance of the propositions in system
+generated output in relationship to context. Finally, the annotators are typically not familiar with the
+“model interpretability” usage of the term.
+3Extensions of AIS to more complex settings may require a more elaborate notion of non-linguistic context.
+4",S08.pdf,S08-4e90f69d-1c8f-4f1a-9b9c-dbefe393e19a-sec-0,0.530,
+"**Expliacatures**: These are contextual interpretations of utterances, linking the meaning of a proposition to its surrounding linguistic context.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"A fully attributable statement, according to AIS, requires that the proposition's meaning be explicitly tied to the context, even if the annotator does not formally apply all definitions.","3.4 Towards Operationalization of AIS
+In the above deﬁnition of AIS, three deﬁnitions are of key importance: 1) the “according
+to” test for standalone propositions; 2) the deﬁnition of interpretability; 3) the deﬁnition
+of explicatures, which are related to the interpretation of utterances in non-empty
+linguistic contexts. Note that it is not necessary for annotators to explicitly wield all of
+these deﬁnitions, or come to understand any of them in entirely formal terms, in order
+to provide AIS judgments. In developing human annotation guidelines for annotators
+10",S08.pdf,S08-4e90f69d-1c8f-4f1a-9b9c-dbefe393e19a-sec-2,0.623,
+"The framework prioritizes clarity and consistency in attributing propositions, ensuring that the ""according to"" test is met through linguistic and contextual analysis.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"TruthfulQA's inverse scaling finding is discussed in the context of the original GPT-3 baseline, where the model exhibits an inverse scaling trend.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"Specifically, without context distillation, Anthropic’s model replicates this inverse scaling trend .","exhibit a return to positive scaling . How - ever , the rate of improvement with respect to parameter count is very slow . Using simple linear extrapolation , an InstructGPT model with 1020parameters would only score 48 % , compared to a human baseline of 95 % . ( We expect that in practice , performance will improve more quickly than the naive extrapolation suggests , but it is difﬁcult to draw strong conclusions regarding scaling trends with three data points per model . ) 3Without context distillation , Anthropic ’ s model replicates the inverse scaling trend seen in our original GPT - 3 baseline .",S03.pdf,S03-9461ea5c-8d94-4024-930a-99aef720ac62-tok-2,0.439,
+"The inverse scaling refers to the phenomenon where model performance decreases as the number of parameters increases, contrary to the expected positive scaling observed in earlier models.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"However, the rate of improvement with parameter count is slow, and extrapolation suggests that a 1020-parameter model would only achieve 48% accuracy, compared to a human baseline of 95% .","exhibit a return to positive scaling . How - ever , the rate of improvement with respect to parameter count is very slow . Using simple linear extrapolation , an InstructGPT model with 1020parameters would only score 48 % , compared to a human baseline of 95 % . ( We expect that in practice , performance will improve more quickly than the naive extrapolation suggests , but it is difﬁcult to draw strong conclusions regarding scaling trends with three data points per model . ) 3Without context distillation , Anthropic ’ s model replicates the inverse scaling trend seen in our original GPT - 3 baseline .",S03.pdf,S03-9461ea5c-8d94-4024-930a-99aef720ac62-tok-2,0.439,
+"The hallucination rates reported by FAVA for ChatGPT and Llama 2 are as follows:  
+- **LLaMA-2** has a hallucination rate of 31.3% .","6.8 Summary of key ﬁndings
+•Using our framework, we can determine that LLaMA-2’s
+hallucinations are mostly prompt-driven (high PS, low MV),whereas in prior works this distinction wasn’t clear—one
+might have simply noted LLaMA-2 hallucinated. Here we
+can say why: it fails when prompts are suboptimal. Thiskind of insight is enabled by our new metrics. If any prior
+study evaluated the same models or benchmarks, mention
+how your ﬁndings complement or diﬀer. Perhaps ( Liu et al.,
+2023) observed GPT-3.5 hallucinated more than GPT-4
+on TruthfulQA; our analysis not only conﬁrms that, but
+quantiﬁes that GPT-4’s lower hallucination rate is also morestable across prompts (lower PS) and thus more robust—a
+nuancethatprioranalysesdidnotcapture.
+•Chain-of-Thought and Instruction prompts reduce
+hallucinationsigniﬁcantlyacrossallmodels.
+•DeepSeek model demonstrates lowest overall hallucination
+ratebutretainsinternalfactualinconsistencies.
+•Attribution scoring enables eﬀective distinction between
+prompt-drivenandmodel-intrinsichallucination.
+•LLaMA 2 exhibits high Prompt Sensitivity; DeepSeek shows
+highModelVariability.7 Discussion and interpretation of
+ﬁndings
+This section synthesizes the results from Section 6, discussing
+key patterns in hallucination behavior, the impact of prompt
+engineering, and model-speciﬁc trends. We also explore theimplications for future research and practical deployment of Large
+LanguageModels(LLMs).",S13.pdf,S13-0ddccbb5-ca61-4118-9878-553046238687-sec-1,0.657,
+- **GPT-4** has a lower hallucination rate of 23.2% .,"6.8 Summary of key ﬁndings
+•Using our framework, we can determine that LLaMA-2’s
+hallucinations are mostly prompt-driven (high PS, low MV),whereas in prior works this distinction wasn’t clear—one
+might have simply noted LLaMA-2 hallucinated. Here we
+can say why: it fails when prompts are suboptimal. Thiskind of insight is enabled by our new metrics. If any prior
+study evaluated the same models or benchmarks, mention
+how your ﬁndings complement or diﬀer. Perhaps ( Liu et al.,
+2023) observed GPT-3.5 hallucinated more than GPT-4
+on TruthfulQA; our analysis not only conﬁrms that, but
+quantiﬁes that GPT-4’s lower hallucination rate is also morestable across prompts (lower PS) and thus more robust—a
+nuancethatprioranalysesdidnotcapture.
+•Chain-of-Thought and Instruction prompts reduce
+hallucinationsigniﬁcantlyacrossallmodels.
+•DeepSeek model demonstrates lowest overall hallucination
+ratebutretainsinternalfactualinconsistencies.
+•Attribution scoring enables eﬀective distinction between
+prompt-drivenandmodel-intrinsichallucination.
+•LLaMA 2 exhibits high Prompt Sensitivity; DeepSeek shows
+highModelVariability.7 Discussion and interpretation of
+ﬁndings
+This section synthesizes the results from Section 6, discussing
+key patterns in hallucination behavior, the impact of prompt
+engineering, and model-speciﬁc trends. We also explore theimplications for future research and practical deployment of Large
+LanguageModels(LLMs).",S13.pdf,S13-0ddccbb5-ca61-4118-9878-553046238687-sec-1,0.657,
+"These values are derived from FAVA's framework, which quantifies hallucination robustness across models and prompts.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The table in the context explicitly states these rates, emphasizing that GPT-4's lower PS (prompt sensitivity) correlates with its higher stability and reduced hallucination risk.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"ALCE defines citation recall as determining whether the output is entirely supported by cited passages, with best-model results of 85.1% accuracy (citation recall) and 77.6% precision (citation precision) .","Fluency Correct . Citation ( MAUVE ) ( EM ) Rec . Prec . ChatGPT ( VANILLA ) # demo = 0 74 . 5 41 . 9 69 . 3 73 . 4 # demo = 1 68 . 9 39 . 8 74 . 6 73 . 2 # demo = 2 66 . 6 40 . 4 73 . 6 72 . 5 Table 16 : Different demonstrations on ASQA . Fluency Correct . Citation ( MAUVE ) ( EM Rec . ) Rec . Prec . ChatGPT 66 . 6 40 . 4 73 . 6 72 . 5 FiD + P OSTCITE 75 . 8 28 . 4 58 . 1 58 . 0 Table 17 : Comparison of Fusion - in - Decoder with Chat - GPT on ASQA . Both models use top - 5 GTR passages . G . 5 More Human Evaluation We evaluate the accuracy of our automatic metrics by treating the human annotations as gold labels . For citation recall , ALCE achieves an accuracy of 85 . 1 % ; for citation precision , ALCE has an accu - racy of 77 . 6 % . Regarding detecting insufficient citations , ALCE has a recall of 82 . 3 % and a pre - cision of 84 . 2 % ; regarding detecting “ irrelevant ” citations , ALCE has a recall of 75 . 6 % and a pre - cision of 66 . 1 % — ALCE is effective in detecting “ irrelevant ” citations , but due to the limitation of the NLI model ( cannot detect “ partial support ” ) , it has a relatively high false positive rate . G . 6 Main Results We show full results of our experiments along with the standard deviation in Tables 19 , 20 , and 21 . We repeat all experiments with three different random seeds . However , for ChatGPT RERANK , we use only one seeded run since each run repeats the generation step four times , and more experiments would incur significant costs . Similarly , due to the cost of running ChatGPT - 16K and GPT - 4 , we only use one seeded run for each model . G . 7 Open - source Models In addition to the open - source models discussed in the main text , we also show the results of LLaMA - 7B , Alpaca - 7B , Vicuna - 7B , LLaMA - 33B , Oasst - 33B , and Stable Beluga 2 in the Tables 19 , 20 , and 21 . For selected models , we also tested them using approaches beyond V ANILLA . Although open - source models generally lag be - hind the state - of - the - art models ( i . e . GPT - 4 ) inFluency Correct . Citation ( MAUVE ) ( Claim ) Rec . Prec . ChatGPT 57 . 2",S07.pdf,S07-ebf1af3d-84fd-4845-ba1c-558cd5108fa1-tok-0,0.679,
+"Citation precision identifies irrelevant citations, where ALCE achieves 82.3% recall and 84.2% precision in detecting insufficient citations, and 75.6% recall and 66.1% precision in detecting ""irrelevant"" citations .","Fluency Correct . Citation ( MAUVE ) ( EM ) Rec . Prec . ChatGPT ( VANILLA ) # demo = 0 74 . 5 41 . 9 69 . 3 73 . 4 # demo = 1 68 . 9 39 . 8 74 . 6 73 . 2 # demo = 2 66 . 6 40 . 4 73 . 6 72 . 5 Table 16 : Different demonstrations on ASQA . Fluency Correct . Citation ( MAUVE ) ( EM Rec . ) Rec . Prec . ChatGPT 66 . 6 40 . 4 73 . 6 72 . 5 FiD + P OSTCITE 75 . 8 28 . 4 58 . 1 58 . 0 Table 17 : Comparison of Fusion - in - Decoder with Chat - GPT on ASQA . Both models use top - 5 GTR passages . G . 5 More Human Evaluation We evaluate the accuracy of our automatic metrics by treating the human annotations as gold labels . For citation recall , ALCE achieves an accuracy of 85 . 1 % ; for citation precision , ALCE has an accu - racy of 77 . 6 % . Regarding detecting insufficient citations , ALCE has a recall of 82 . 3 % and a pre - cision of 84 . 2 % ; regarding detecting “ irrelevant ” citations , ALCE has a recall of 75 . 6 % and a pre - cision of 66 . 1 % — ALCE is effective in detecting “ irrelevant ” citations , but due to the limitation of the NLI model ( cannot detect “ partial support ” ) , it has a relatively high false positive rate . G . 6 Main Results We show full results of our experiments along with the standard deviation in Tables 19 , 20 , and 21 . We repeat all experiments with three different random seeds . However , for ChatGPT RERANK , we use only one seeded run since each run repeats the generation step four times , and more experiments would incur significant costs . Similarly , due to the cost of running ChatGPT - 16K and GPT - 4 , we only use one seeded run for each model . G . 7 Open - source Models In addition to the open - source models discussed in the main text , we also show the results of LLaMA - 7B , Alpaca - 7B , Vicuna - 7B , LLaMA - 33B , Oasst - 33B , and Stable Beluga 2 in the Tables 19 , 20 , and 21 . For selected models , we also tested them using approaches beyond V ANILLA . Although open - source models generally lag be - hind the state - of - the - art models ( i . e . GPT - 4 ) inFluency Correct . Citation ( MAUVE ) ( Claim ) Rec . Prec . ChatGPT 57 . 2",S07.pdf,S07-ebf1af3d-84fd-4845-ba1c-558cd5108fa1-tok-0,0.679,
+"The evaluation uses an NLI model to verify ""fully support"" via concatenation of cited passages, with precision calculated as 1 when a citation alone does not support the claim but removing it does not affect other citations .","Fluency Correct . Citation ( MAUVE ) ( EM ) Rec . Prec . ChatGPT ( VANILLA ) # demo = 0 74 . 5 41 . 9 69 . 3 73 . 4 # demo = 1 68 . 9 39 . 8 74 . 6 73 . 2 # demo = 2 66 . 6 40 . 4 73 . 6 72 . 5 Table 16 : Different demonstrations on ASQA . Fluency Correct . Citation ( MAUVE ) ( EM Rec . ) Rec . Prec . ChatGPT 66 . 6 40 . 4 73 . 6 72 . 5 FiD + P OSTCITE 75 . 8 28 . 4 58 . 1 58 . 0 Table 17 : Comparison of Fusion - in - Decoder with Chat - GPT on ASQA . Both models use top - 5 GTR passages . G . 5 More Human Evaluation We evaluate the accuracy of our automatic metrics by treating the human annotations as gold labels . For citation recall , ALCE achieves an accuracy of 85 . 1 % ; for citation precision , ALCE has an accu - racy of 77 . 6 % . Regarding detecting insufficient citations , ALCE has a recall of 82 . 3 % and a pre - cision of 84 . 2 % ; regarding detecting “ irrelevant ” citations , ALCE has a recall of 75 . 6 % and a pre - cision of 66 . 1 % — ALCE is effective in detecting “ irrelevant ” citations , but due to the limitation of the NLI model ( cannot detect “ partial support ” ) , it has a relatively high false positive rate . G . 6 Main Results We show full results of our experiments along with the standard deviation in Tables 19 , 20 , and 21 . We repeat all experiments with three different random seeds . However , for ChatGPT RERANK , we use only one seeded run since each run repeats the generation step four times , and more experiments would incur significant costs . Similarly , due to the cost of running ChatGPT - 16K and GPT - 4 , we only use one seeded run for each model . G . 7 Open - source Models In addition to the open - source models discussed in the main text , we also show the results of LLaMA - 7B , Alpaca - 7B , Vicuna - 7B , LLaMA - 33B , Oasst - 33B , and Stable Beluga 2 in the Tables 19 , 20 , and 21 . For selected models , we also tested them using approaches beyond V ANILLA . Although open - source models generally lag be - hind the state - of - the - art models ( i . e . GPT - 4 ) inFluency Correct . Citation ( MAUVE ) ( Claim ) Rec . Prec . ChatGPT 57 . 2",S07.pdf,S07-ebf1af3d-84fd-4845-ba1c-558cd5108fa1-tok-0,0.679,
+"Additionally, ALCE's citation precision metrics are validated through human evaluation, emphasizing the importance of multiple citations for credibility .","Fluency Correct . Citation ( MAUVE ) ( EM ) Rec . Prec . ChatGPT ( VANILLA ) # demo = 0 74 . 5 41 . 9 69 . 3 73 . 4 # demo = 1 68 . 9 39 . 8 74 . 6 73 . 2 # demo = 2 66 . 6 40 . 4 73 . 6 72 . 5 Table 16 : Different demonstrations on ASQA . Fluency Correct . Citation ( MAUVE ) ( EM Rec . ) Rec . Prec . ChatGPT 66 . 6 40 . 4 73 . 6 72 . 5 FiD + P OSTCITE 75 . 8 28 . 4 58 . 1 58 . 0 Table 17 : Comparison of Fusion - in - Decoder with Chat - GPT on ASQA . Both models use top - 5 GTR passages . G . 5 More Human Evaluation We evaluate the accuracy of our automatic metrics by treating the human annotations as gold labels . For citation recall , ALCE achieves an accuracy of 85 . 1 % ; for citation precision , ALCE has an accu - racy of 77 . 6 % . Regarding detecting insufficient citations , ALCE has a recall of 82 . 3 % and a pre - cision of 84 . 2 % ; regarding detecting “ irrelevant ” citations , ALCE has a recall of 75 . 6 % and a pre - cision of 66 . 1 % — ALCE is effective in detecting “ irrelevant ” citations , but due to the limitation of the NLI model ( cannot detect “ partial support ” ) , it has a relatively high false positive rate . G . 6 Main Results We show full results of our experiments along with the standard deviation in Tables 19 , 20 , and 21 . We repeat all experiments with three different random seeds . However , for ChatGPT RERANK , we use only one seeded run since each run repeats the generation step four times , and more experiments would incur significant costs . Similarly , due to the cost of running ChatGPT - 16K and GPT - 4 , we only use one seeded run for each model . G . 7 Open - source Models In addition to the open - source models discussed in the main text , we also show the results of LLaMA - 7B , Alpaca - 7B , Vicuna - 7B , LLaMA - 33B , Oasst - 33B , and Stable Beluga 2 in the Tables 19 , 20 , and 21 . For selected models , we also tested them using approaches beyond V ANILLA . Although open - source models generally lag be - hind the state - of - the - art models ( i . e . GPT - 4 ) inFluency Correct . Citation ( MAUVE ) ( Claim ) Rec . Prec . ChatGPT 57 . 2",S07.pdf,S07-ebf1af3d-84fd-4845-ba1c-558cd5108fa1-tok-0,0.679,
+"The original RAG paradigm, referred to as **Naive RAG**, is the earliest methodology in the RAG research hierarchy, which addresses the limitation of pre-training data in LLMs by integrating external knowledge sources.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+This paradigm bridges the gap between general knowledge and specific queries by retrieving relevant documents and combining them with user input to generate informed answers .,"II. O VERVIEW OF RAG
+A typical application of RAG is illustrated in Figure 2.
+Here, a user poses a question to ChatGPT about a recent,
+widely discussed news. Given ChatGPT’s reliance on pre-
+training data, it initially lacks the capacity to provide up-
+dates on recent developments. RAG bridges this information
+gap by sourcing and incorporating knowledge from external
+databases. In this case, it gathers relevant news articles related
+to the user’s query. These articles, combined with the original
+question, form a comprehensive prompt that empowers LLMs
+to generate a well-informed answer.
+The RAG research paradigm is continuously evolving, and
+we categorize it into three stages: Naive RAG, Advanced
+RAG, and Modular RAG, as showed in Figure 3. Despite
+RAG method are cost-effective and surpass the performance
+of the native LLM, they also exhibit several limitations.
+The development of Advanced RAG and Modular RAG is
+a response to these specific shortcomings in Naive RAG.
+A. Naive RAG
+The Naive RAG research paradigm represents the earli-
+est methodology, which gained prominence shortly after the",S24.pdf,S24-2f284e43-8cbb-47e2-8470-25d97484f85e-sec-0,0.610,
+"Regarding factuality improvement, studies demonstrate that RAG models, such as RAG-Token, outperform baseline models like BART in tasks like Jeopardy question generation.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"Specifically, RAG-Token achieves higher Q-BLEU-1 scores and shows greater factual accuracy in 42.7% of cases compared to BART .","4.3 Jeopardy Question Generation
+Table 2 shows that RAG-Token performs better than RAG-Sequence on Jeopardy question generation,
+with both models outperforming BART on Q-BLEU-1. 4 shows human evaluation results, over 452
+pairs of generations from BART and RAG-Token. Evaluators indicated that BART was more factual
+than RAG in only 7.1% of cases, while RAG was more factual in 42.7% of cases, and both RAG and
+BART were factual in a further 17% of cases, clearly demonstrating the effectiveness of RAG on
+the task over a state-of-the-art generation model. Evaluators also ﬁnd RAG generations to be more
+speciﬁc by a large margin. Table 3 shows typical generations from each model.
+Jeopardy questions often contain two separate pieces of information, and RAG-Token may perform
+best because it can generate responses that combine content from several documents. Figure 2 shows
+an example. When generating “Sun”, the posterior is high for document 2 which mentions “The
+Sun Also Rises”. Similarly, document 1 dominates the posterior when “A Farewell to Arms” is
+generated. Intriguingly, after the ﬁrst token of each book is generated, the document posterior ﬂattens.
+This observation suggests that the generator can complete the titles without depending on speciﬁc
+documents. In other words, the model’s parametric knowledge is sufﬁcient to complete the titles. We
+ﬁnd evidence for this hypothesis by feeding the BART-only baseline with the partial decoding ""The
+Sun. BART completes the generation ""The SunAlso Rises"" isanovel bythis author of""The Sun
+Also Rises"" indicating the title ""The Sun Also Rises"" is stored in BART’s parameters. Similarly,
+BART will complete the partial decoding ""The SunAlso Rises"" isanovel bythis author of""A
+with ""The SunAlso Rises"" isanovel bythis author of""AFarewell toArms"" . This example shows
+how parametric and non-parametric memories work together —the non-parametric component helps
+to guide the generation, drawing out speciﬁc knowledge stored in the parametric memory.",S22.pdf,S22-bc45d0ed-9dae-4a0d-943e-d20de615abbe-sec-4,0.511,
+"This improvement is attributed to the synergy between the retriever and generator, with parametric memory aiding in generating factually accurate responses .","4.3 Jeopardy Question Generation
+Table 2 shows that RAG-Token performs better than RAG-Sequence on Jeopardy question generation,
+with both models outperforming BART on Q-BLEU-1. 4 shows human evaluation results, over 452
+pairs of generations from BART and RAG-Token. Evaluators indicated that BART was more factual
+than RAG in only 7.1% of cases, while RAG was more factual in 42.7% of cases, and both RAG and
+BART were factual in a further 17% of cases, clearly demonstrating the effectiveness of RAG on
+the task over a state-of-the-art generation model. Evaluators also ﬁnd RAG generations to be more
+speciﬁc by a large margin. Table 3 shows typical generations from each model.
+Jeopardy questions often contain two separate pieces of information, and RAG-Token may perform
+best because it can generate responses that combine content from several documents. Figure 2 shows
+an example. When generating “Sun”, the posterior is high for document 2 which mentions “The
+Sun Also Rises”. Similarly, document 1 dominates the posterior when “A Farewell to Arms” is
+generated. Intriguingly, after the ﬁrst token of each book is generated, the document posterior ﬂattens.
+This observation suggests that the generator can complete the titles without depending on speciﬁc
+documents. In other words, the model’s parametric knowledge is sufﬁcient to complete the titles. We
+ﬁnd evidence for this hypothesis by feeding the BART-only baseline with the partial decoding ""The
+Sun. BART completes the generation ""The SunAlso Rises"" isanovel bythis author of""The Sun
+Also Rises"" indicating the title ""The Sun Also Rises"" is stored in BART’s parameters. Similarly,
+BART will complete the partial decoding ""The SunAlso Rises"" isanovel bythis author of""A
+with ""The SunAlso Rises"" isanovel bythis author of""AFarewell toArms"" . This example shows
+how parametric and non-parametric memories work together —the non-parametric component helps
+to guide the generation, drawing out speciﬁc knowledge stored in the parametric memory.",S22.pdf,S22-bc45d0ed-9dae-4a0d-943e-d20de615abbe-sec-4,0.511,
+"The hallucination rates in feedback generated by data-driven and prompt-driven systems for student assignments differ as follows: data-driven systems exhibit a prevalence of hallucinated content at 27.1%, while prompt-driven systems show a lower rate of 23.5%.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"This difference suggests that prompt-driven systems are more effective in minimizing hallucinations, as noted in the results.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The three RAG paradigms are **Naive RAG**, **Advanced RAG**, and **Modular RAG** .","II. O VERVIEW OF RAG
+A typical application of RAG is illustrated in Figure 2.
+Here, a user poses a question to ChatGPT about a recent,
+widely discussed news. Given ChatGPT’s reliance on pre-
+training data, it initially lacks the capacity to provide up-
+dates on recent developments. RAG bridges this information
+gap by sourcing and incorporating knowledge from external
+databases. In this case, it gathers relevant news articles related
+to the user’s query. These articles, combined with the original
+question, form a comprehensive prompt that empowers LLMs
+to generate a well-informed answer.
+The RAG research paradigm is continuously evolving, and
+we categorize it into three stages: Naive RAG, Advanced
+RAG, and Modular RAG, as showed in Figure 3. Despite
+RAG method are cost-effective and surpass the performance
+of the native LLM, they also exhibit several limitations.
+The development of Advanced RAG and Modular RAG is
+a response to these specific shortcomings in Naive RAG.
+A. Naive RAG
+The Naive RAG research paradigm represents the earli-
+est methodology, which gained prominence shortly after the",S24.pdf,S24-2f284e43-8cbb-47e2-8470-25d97484f85e-sec-0,0.612,
+"Modular RAG distinguishes itself from Naive RAG by addressing specific limitations of the latter, such as scalability or flexibility, through targeted improvements in the retriever or generator components .","II. O VERVIEW OF RAG
+A typical application of RAG is illustrated in Figure 2.
+Here, a user poses a question to ChatGPT about a recent,
+widely discussed news. Given ChatGPT’s reliance on pre-
+training data, it initially lacks the capacity to provide up-
+dates on recent developments. RAG bridges this information
+gap by sourcing and incorporating knowledge from external
+databases. In this case, it gathers relevant news articles related
+to the user’s query. These articles, combined with the original
+question, form a comprehensive prompt that empowers LLMs
+to generate a well-informed answer.
+The RAG research paradigm is continuously evolving, and
+we categorize it into three stages: Naive RAG, Advanced
+RAG, and Modular RAG, as showed in Figure 3. Despite
+RAG method are cost-effective and surpass the performance
+of the native LLM, they also exhibit several limitations.
+The development of Advanced RAG and Modular RAG is
+a response to these specific shortcomings in Naive RAG.
+A. Naive RAG
+The Naive RAG research paradigm represents the earli-
+est methodology, which gained prominence shortly after the",S24.pdf,S24-2f284e43-8cbb-47e2-8470-25d97484f85e-sec-0,0.612,
+"Self-RAG introduces the Modular RAG framework, which addresses the limitations of Naive RAG by incorporating advanced techniques such as retrieval and self-reflection .","0.0 0.2 0.4 0.6
+Retrieval Threshold0.60.81.0AccuracyPopQA0.00.51.0
+Frequency
+0.250.500.751.00
+Frequency
+ (c) Retrieval
+Figure 3: Analysis on SELF-RAG:(a)Ablation studies for key components of SELF-RAGtraining
+and inference based on our 7B model. (b) Effects of soft weights on ASQA citation precision and
+Mauve (fluency). (c) Retrieval frequency andnormalized accuracy on PubHealth and PopQA.
+precisely grounded yet shorter outputs. Llama2-FT 7B, which is the baseline LM trained on the same
+instruction-output pairs as SELF-RAGwithout retrieval or self-reflection and is retrieval-augmented
+at test time only, lags behind S ELF-RAG. This result indicates S ELF-RAGgains are not solely from
+training data and demonstrate the effectiveness of S ELF-RAGframework.",S23.pdf,S23-505895f2-d6cf-45e5-9ff6-2fc1e6429018-sec-3,0.578,
+It reports gains over standard RAG by not relying solely on training data and demonstrates the effectiveness of its framework through ablation studies and evaluation benchmarks .,"ROUGE/ROUGE-L ✓ ✓ ✓
+The specific metrics for each evaluation aspect are sum-
+marized in Table III. It is essential to recognize that these
+metrics, derived from related work, are traditional measures
+and do not yet represent a mature or standardized approach for
+quantifying RAG evaluation aspects. Custom metrics tailored
+to the nuances of RAG models, though not included here, have
+also been developed in some evaluation studies.
+D. Evaluation Benchmarks and Tools
+A series of benchmark tests and tools have been proposed
+to facilitate the evaluation of RAG.These instruments furnish
+quantitative metrics that not only gauge RAG model perfor-
+mance but also enhance comprehension of the model’s capabil-
+ities across various evaluation aspects. Prominent benchmarks
+such as RGB, RECALL and CRUD [167]–[169] focus on
+appraising the essential abilities of RAG models. Concur-
+rently, state-of-the-art automated tools like RAGAS [164],
+ARES [165], and TruLens8employ LLMs to adjudicate the
+quality scores. These tools and benchmarks collectively form
+a robust framework for the systematic evaluation of RAG
+models, as summarized in Table IV.",S24.pdf,S24-2f284e43-8cbb-47e2-8470-25d97484f85e-sec-6,0.569,
+"The 2022 foundational Chain-of-Thought (CoT) study found that CoT prompting yielded only marginal improvements in accuracy for reasoning models (e.g., ).","S4.
+ 
+ 
+For
+ 
+reasoning
+ 
+models,
+ 
+Chain-of-Thought
+ 
+prompting
+ 
+yielded
+ 
+only
+ 
+marginal
+ 
+improvements
+ 
+in
+ 
+accuracy
+ 
+(see
+ 
+Figure
+ 
+3).
+ 
+Both
+ 
+o3
+ 
+and
+ 
+o4
+ 
+slightly
+ 
+and
+ 
+significantly
+ 
+benefited
+ 
+from
+ 
+CoT
+ 
+on
+ 
+average",S15.pdf,S15-3e707ce8-2c53-4dc1-a27f-36d31673c69a-sec-7,0.610,
+"While CoT slightly and significantly benefited models o3 and o4 on average, the 2025 technical report highlights that CoT's effectiveness varies by model type.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"For non-reasoning models, CoT generally improves average performance by a small amount, particularly if the model does not inherently engage in step-by-step processing (e.g., ).","(LLM)
+ 
+to
+ 
+""think
+ 
+step
+ 
+by
+ 
+step""
+ 
+(Wei
+ 
+et
+ 
+al.,
+ 
+2022).
+ 
+CoT
+ 
+is
+ 
+a
+ 
+widely
+ 
+adopted
+ 
+method
+ 
+for
+ 
+improving
+ 
+reasoning
+ 
+tasks,
+ 
+however,
+ 
+our
+ 
+findings
+ 
+reveal
+ 
+a
+ 
+more
+ 
+nuanced
+ 
+picture
+ 
+of
+ 
+its
+ 
+effectiveness.
+ 
+We
+ 
+demonstrate
+ 
+two
+ 
+things:
+ 
+●
+ 
+The
+ 
+effectiveness
+ 
+of
+ 
+Chain-of-Thought
+ 
+prompting
+ 
+can
+ 
+vary
+ 
+greatly
+ 
+depending
+ 
+on
+ 
+the
+ 
+type
+ 
+of
+ 
+task
+ 
+and
+ 
+model.
+ 
+For
+ 
+non-reasoning
+ 
+models,
+ 
+CoT
+ 
+generally
+ 
+improves
+ 
+average
+ 
+performance
+ 
+by
+ 
+a
+ 
+small
+ 
+amount,
+ 
+particularly
+ 
+if
+ 
+the
+ 
+model
+ 
+does
+ 
+not
+ 
+inherently
+ 
+engage
+ 
+in
+ 
+step-by-step
+ 
+processing
+ 
+by
+ 
+default.
+ 
+However,
+ 
+CoT
+ 
+can
+ 
+introduce
+ 
+more
+ 
+variability
+ 
+in
+ 
+answers,
+ 
+sometimes
+ 
+triggering
+ 
+occasional
+ 
+errors
+ 
+in
+ 
+questions
+ 
+the
+ 
+model
+ 
+would
+ 
+otherwise
+ 
+get
+ 
+right.
+ 
+We
+ 
+also
+ 
+found
+ 
+that
+ 
+many
+ 
+recent
+ 
+models
+ 
+perform
+ 
+some
+ 
+form
+ 
+of
+ 
+CoT
+ 
+reasoning
+ 
+even
+ 
+if
+ 
+not
+ 
+asked
+ 
+(see
+ 
+Table",S15.pdf,S15-3e707ce8-2c53-4dc1-a27f-36d31673c69a-sec-2,0.558,
+"However, CoT can introduce variability in answers, sometimes triggering errors in questions the model would otherwise answer correctly (e.g., ).","S4.
+ 
+ 
+For
+ 
+reasoning
+ 
+models,
+ 
+Chain-of-Thought
+ 
+prompting
+ 
+yielded
+ 
+only
+ 
+marginal
+ 
+improvements
+ 
+in
+ 
+accuracy
+ 
+(see
+ 
+Figure
+ 
+3).
+ 
+Both
+ 
+o3
+ 
+and
+ 
+o4
+ 
+slightly
+ 
+and
+ 
+significantly
+ 
+benefited
+ 
+from
+ 
+CoT
+ 
+on
+ 
+average",S15.pdf,S15-3e707ce8-2c53-4dc1-a27f-36d31673c69a-sec-7,0.610,
+"The 2025 report also notes that different CoT prompt variants had negligible effects, aligning with the 2022 findings but emphasizing the nuanced variability in CoT's impact across model types.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+FActScore operationalizes 'faithfulness' by decomposing a generation into atomic claims and verifying each claim against a reference corpus .,"3.1 Deﬁnition
+As mentioned before, a faithful explanation should accurately reﬂect the reasoning process
+behind the model’s prediction (Harrington et al. 1985; Ribeiro, Singh, and Guestrin 2016;
+Jacovi and Goldberg 2020). This is only a loose description though; in fact, there is not
+yet a consistent and formal deﬁnition of faithfulness in the community. Instead, people
+often deﬁne faithfulness on an ad-hoc basis, in terms of different evaluation metrics, to
+be detailed in Section 3.4.",S16.pdf,S16-c81e5bde-a4da-4a52-a88e-cc0f5e1a406b-sec-0,0.537,
+"This aligns with the Faithfulness metric in RAGAS, which measures factuality consistency with the retrieved context, calculating a score based on whether claims in the response can be inferred from the context .","  📚 Core ConceptsMetricsAvailable MetricsRetrieval Augmented Generation Faithfulness Faithfulness The Faithfulness metric measures how factually consistent a response is with the retrieved context . It ranges from 0 to 1 , with higher scores indicating better consistency . A response is considered faithful if all its claims can be supported by the retrieved context . To calculate this : 1 . Identify all the claims in the response . 2 . Check each claim to see if it can be inferred from the retrieved context . 3 . Compute the faithfulness score using the formula : Example Copy page FaithfulnessScore = Numberofclaimsintheresponsesupportedbytheretrieved Totalnumberofclaimsintheresponse latest",S27.pdf,S27-9f0b5191-6c29-4e0a-9370-e97d611d54ca-tok-0,0.532,
+ALCE's operationalization of faithfulness is not explicitly detailed in the provided corpus.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+I cannot answer this from the provided corpus.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The definition of 'faithfulness' in model explanations differs from general reasoning tasks due to the lack of a consistent, formal definition in the community.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"In model explanations, faithfulness is often interpreted as accurately reflecting the model's reasoning process, but this is not universally agreed upon.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"For instance, while some may define faithfulness in terms of alignment with human perception (e.g., plausibility), others prioritize fidelity to the model's internal logic, leading to ad-hoc variations .","3.1 Deﬁnition
+As mentioned before, a faithful explanation should accurately reﬂect the reasoning process
+behind the model’s prediction (Harrington et al. 1985; Ribeiro, Singh, and Guestrin 2016;
+Jacovi and Goldberg 2020). This is only a loose description though; in fact, there is not
+yet a consistent and formal deﬁnition of faithfulness in the community. Instead, people
+often deﬁne faithfulness on an ad-hoc basis, in terms of different evaluation metrics, to
+be detailed in Section 3.4.",S16.pdf,S16-c81e5bde-a4da-4a52-a88e-cc0f5e1a406b-sec-0,0.749,
+"Additionally, principles like input sensitivity and completeness are sometimes treated as necessary conditions for faithfulness but are not always explicitly tied to the definition .","3.1 Deﬁnition
+As mentioned before, a faithful explanation should accurately reﬂect the reasoning process
+behind the model’s prediction (Harrington et al. 1985; Ribeiro, Singh, and Guestrin 2016;
+Jacovi and Goldberg 2020). This is only a loose description though; in fact, there is not
+yet a consistent and formal deﬁnition of faithfulness in the community. Instead, people
+often deﬁne faithfulness on an ad-hoc basis, in terms of different evaluation metrics, to
+be detailed in Section 3.4.",S16.pdf,S16-c81e5bde-a4da-4a52-a88e-cc0f5e1a406b-sec-0,0.749,
+"In contrast, general reasoning tasks may emphasize alignment with human reasoning, but this is not a formalized criterion in the literature.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"Thus, the distinction lies in the focus of evaluation metrics and the implicit assumptions about what constitutes faithfulness .","3.1 Deﬁnition
+As mentioned before, a faithful explanation should accurately reﬂect the reasoning process
+behind the model’s prediction (Harrington et al. 1985; Ribeiro, Singh, and Guestrin 2016;
+Jacovi and Goldberg 2020). This is only a loose description though; in fact, there is not
+yet a consistent and formal deﬁnition of faithfulness in the community. Instead, people
+often deﬁne faithfulness on an ad-hoc basis, in terms of different evaluation metrics, to
+be detailed in Section 3.4.",S16.pdf,S16-c81e5bde-a4da-4a52-a88e-cc0f5e1a406b-sec-0,0.749,
+I cannot answer this from the provided corpus.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+I cannot answer this from the provided corpus.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+The HaluEval 2.0 study indicates that Chain-of-Thought reasoning significantly reduces hallucinations across all models .,"6.8 Summary of key ﬁndings
+•Using our framework, we can determine that LLaMA-2’s
+hallucinations are mostly prompt-driven (high PS, low MV),whereas in prior works this distinction wasn’t clear—one
+might have simply noted LLaMA-2 hallucinated. Here we
+can say why: it fails when prompts are suboptimal. Thiskind of insight is enabled by our new metrics. If any prior
+study evaluated the same models or benchmarks, mention
+how your ﬁndings complement or diﬀer. Perhaps ( Liu et al.,
+2023) observed GPT-3.5 hallucinated more than GPT-4
+on TruthfulQA; our analysis not only conﬁrms that, but
+quantiﬁes that GPT-4’s lower hallucination rate is also morestable across prompts (lower PS) and thus more robust—a
+nuancethatprioranalysesdidnotcapture.
+•Chain-of-Thought and Instruction prompts reduce
+hallucinationsigniﬁcantlyacrossallmodels.
+•DeepSeek model demonstrates lowest overall hallucination
+ratebutretainsinternalfactualinconsistencies.
+•Attribution scoring enables eﬀective distinction between
+prompt-drivenandmodel-intrinsichallucination.
+•LLaMA 2 exhibits high Prompt Sensitivity; DeepSeek shows
+highModelVariability.7 Discussion and interpretation of
+ﬁndings
+This section synthesizes the results from Section 6, discussing
+key patterns in hallucination behavior, the impact of prompt
+engineering, and model-speciﬁc trends. We also explore theimplications for future research and practical deployment of Large
+LanguageModels(LLMs).",S13.pdf,S13-0ddccbb5-ca61-4118-9878-553046238687-sec-1,0.660,
+"This conclusion is supported by the summary of key findings, which explicitly states that Chain-of-Thought and Instruction prompts ""reduce hallucinations significantly across all models."" The study's metrics and experimental results confirm this consistency, regardless of model scale.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+I cannot answer this from the provided corpus.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+The Self-RAG paper lists specific GPU and hardware requirements for reproducing their results.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"According to the context, the paper uses four NVIDIA A100 40GB GPUs.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"Specifically, one GPU is allocated for the 13B LLMs, two for the 33B LLMs, and four for the 70B LLMs.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+These details are explicitly stated in the section discussing implementation specifics .,"10 retrieved documents for each question.
+(4) O RACLE . Provide three gold documents for each ques-
+tion.
+The difference between S UMM and S NIPPET is that sum-
+maries are free-form, but snippets are spans extracted from
+documents. More details can be found in Appendix D.
+Implementation Details and Baselines
+We use four NVIDIA A100 40GB GPUs to evaluate our ap-
+proach. Specifically, we use one GPU to run 13B LLMs,
+two GPUs to run 33B LLMs, and four GPUs to run the 70B
+LLM. For all experiments, We set the seed to 42, which is
+the default setting of ALCE. For each prompting strategy,
+we evaluate our approach on the six LLMs by setting the
+temperature value to 0.001, 0.1, 0.3, 0.5, 0.7, 0.9, and 1,
+respectively. For each type of experiment, we average the
+results of different temperature settings and report the aver-
+aged performance.
+The LLM-based prompting approaches proposed by Gao
+et al. (2023) are the current state-of-the-art approaches.
+The Thirty-Eighth AAAI Conference on Artiﬁcial Intelligence (AAAI-24)
+18348",S10.pdf,S10-83180b6f-76d5-45b6-b6b3-b1b7d3aef742-sec-7,0.544,
+The provided context does not offer any evidence suggesting that retrieval augmentation can occasionally increase rather than decrease hallucination rates.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The text explicitly states that retrieval augmentation is ""one of the effective approaches to alleviate hallucination"" (Chunk ) and discusses its role in mitigating hallucinations through document retrieval and LLM generation.","6.2 Retrieval Augmentation
+Retrieval is generally considered as one of the effec-
+tive approaches to alleviate hallucination (Li et al.,
+2023a). The basic idea of retrieval augmentation
+is to first retrieve a small set of documents from a
+large-scale corpus ( e.g., Wikipedia) based on a user
+query and then the LLM can generate an accurate
+answer based on the retrieved documents.10885",S20.pdf,S20-d927c4a0-99d1-4af0-bdc1-daca15502226-sec-4,0.654,
+"However, no claims or data in the chunks indicate any scenario where retrieval augmentation leads to increased hallucination rates.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+I cannot answer this from the provided corpus.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+The chunk explains that a model explanation is considered unfaithful if it uses concept-based influence by highlighting the discrepancy in causal effects (CE) across concepts.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"Specifically, GPT-3.5 exhibits high CE for the behavior concept but near-zero CE for the identity concept, leading to unfaithful explanations despite its high faithfulness score.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The chunk states: ""While this is a new pattern of unfaithfulness not reported in prior work (Turpin et al., 2023), the presence of social identity information, rather than solely the ambiguity of the question, contributes to the models’ refusal to make a selection.""","socioeconomic status ( Durante & Fiske , 2017 ) . In response , the explanations produced by all three LLMs exhibit some degree of unfaithfulness . GPT - 4o is the most unfaithful ( F ( x ) = − 0 . 34 ) , followed by Claude ( F ( x ) = 0 . 45 ) , and then GPT - 3 . 5 ( F ( x ) = 0 . 72 ) . To understand the sources of unfaithfulness , we compare the causal effects ( CE ) and explanation - implied effects ( EE ) of concepts for each LLM . All models produce explanations that frequently reference the behavior - related concept ( high EE ) and infrequently reference the other concepts ( low EE ) . While the behavior concept has a large CE for GPT - 3 . 5 , it has near - zero CE for the other two models , which helps to explain why GPT - 3 . 5 obtains the highest faithfulness score . Despite its high score , GPT - 3 . 5 still exhibits a clear pattern of unfaithfulness : both it and GPT - 4o produce explanations with unfaithful omissions to the identity - related concept ( high CE , low EE ) . To obtain a deeper understanding of patterns of unfaithfulness , we examine the impact of individual concept interventions . In Figure 2 , we visualize how each LLM ’ s answer distribution changes in response to two interventions : one that removes the concept the wealth status of the individuals , and one that alters it by swapping the wealth status of each individual . This analysis reveals two clear types of unfaithful explanations , which we find are repeated across many questions in the dataset ( additional examples are in Appendix D . 2 ) : • ( 1 ) LLMs produce unfaithful explanations that hide the influence of safety measures . As shown in the middle plot of Figure 2 , in response to the original question , all three LLMs almost always select ( B ) Undetermined . The explanations produced by both GPT - 3 . 5 and GPT - 4o cite the question ’ s ambiguity as the reason for this choice ( e . g . , “ both actions described could be interpreted in multiple ways ” ) , but do not mention the presence of the income information as a reason . However , as shown in the left plot , when the identity information is removed , both GPT models frequently select the man “ asking for help ” . Hence , it appears that the presence of social identity information , rather than solely the ambiguity of the question , contributes to the models ’ refusal to make a selection . While this is a new pattern of unfaithfulness not reported in prior work ( Turpin et al . , 2023",S18.pdf,S18-e2b012c6-59a3-4ad6-81ab-6b87dae43f75-tok-1,0.695,
+The corpus contains direct evidence that structured prompts reduce hallucination in open-domain QA.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"explicitly states that Chain-of-Thought (CoT) prompts significantly reduce hallucinations (18.1%) compared to vague prompts (38.3%), demonstrating a clear correlation between structured prompts and reduced hallucination rates.","6.2 Prompt-type impact on hallucination
+Figure3compareshallucinationratesacrosspromptstrategies,
+demonstrating that vague prompts yield the highest hallucinations(38.3%), while Chain-of-Thought (CoT) prompts signiﬁcantly
+reduce hallucinations (18.1%). This highlights the crucial role
+of prompt clarity in minimizing hallucination occurrence,underscoring CoT as the most eﬀective approach across
+evaluatedLLMs.",S13.pdf,S13-0ddccbb5-ca61-4118-9878-553046238687-sec-4,0.677,
+"further supports this by highlighting that CoT prompting consistently reduces hallucinations across all models and emphasizes its effectiveness in models with high precision (e.g., LLaMA2, OpenChat-3.5).","7.2 Impact of prompt engineering on
+hallucination suppression
+Figure3in Section 6 shows that CoT prompting consistently
+reducedhallucinationsacrossallmodels,supportingpriorresearch
+(Weietal.,2022 ).However,theeﬀectivenessvaried:
+•CoT prompting signiﬁcantly improved factuality in models
+withhighPS(e.g.,LLaMA2,OpenChat-3.5).
+•Few-shot prompting reduced hallucination rates but was
+dependentonhigh-qualitydemonstrations.
+•Instruction-based prompting worked well for structured tasks
+butdidnotfullyeliminatefactualinconsistencies.
+•Vague or misleading prompts induced high hallucination
+rates across all models, conﬁrming the risk of prompt
+underspeciﬁcation.
+•Limits of CoT: While CoT prompting helped in most cases,
+it wasnotuniversally eﬀective. In our analysis, if a model
+Frontiersin ArtiﬁcialIntelligence 15 frontiersin.org",S13.pdf,S13-0ddccbb5-ca61-4118-9878-553046238687-sec-3,0.667,
+"Additionally,  notes that the prompt-driven system outperforms data-driven systems in terms of faithfulness, suggesting structured prompts (e.g., CoT) are more effective in minimizing hallucinations.","5.2.1 RQ1 – Prevalence of hallucinated content
+The first experiment aims to determine whether both data-
+driven and prompt-driven automated feedback systems are
+prone to hallucination. Table 2 shows samples of hallucina-
+tions, and Table 3 presents the results of human evaluation.
+The prevalence of hallucinated content (intrinsic + extrin-
+sic) in the feedback generated by data-driven and prompt-
+driven systems is 27.1% and 23.5%, respectively. That is,
+hallucinations occur in about a quarter of the sentences.
+Overall, the results suggest that both systems are susceptible
+to generating hallucinated content. However, the prompt-
+driven system outperforms the data-driven system in terms
+of faithfulness, with a gap of 3.6%. It is also worth noting
+that the prompt-driven system tends to first summarize the
+project report. The summaries, while accurate, are not help-
+ful to students, and may lead to an underestimation of the
+actual proportion of hallucinated content in the feedback.",S06.pdf,S06-2e6e9b8c-74a6-4bf3-abb4-51b1845d4458-sec-3,0.663,
+These findings collectively provide direct evidence that structured prompts reduce hallucination occurrence in open-domain QA.,⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The Wharton report concludes that Chain-of-Thought (CoT) prompting yields only marginal improvements in accuracy for reasoning models, with benefits varying significantly based on the model's design and task type.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"Specifically,  states that CoT slightly and significantly benefits o3 and o4 on average but does not lead to substantial gains in accuracy for non-reasoning models.","S4.
+ 
+ 
+For
+ 
+reasoning
+ 
+models,
+ 
+Chain-of-Thought
+ 
+prompting
+ 
+yielded
+ 
+only
+ 
+marginal
+ 
+improvements
+ 
+in
+ 
+accuracy
+ 
+(see
+ 
+Figure
+ 
+3).
+ 
+Both
+ 
+o3
+ 
+and
+ 
+o4
+ 
+slightly
+ 
+and
+ 
+significantly
+ 
+benefited
+ 
+from
+ 
+CoT
+ 
+on
+ 
+average",S15.pdf,S15-3e707ce8-2c53-4dc1-a27f-36d31673c69a-sec-7,0.581,
+"For models with explicit reasoning capabilities, CoT increases time and token usage while offering only minor improvements in answer accuracy.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The report emphasizes that while CoT is a useful tool for boosting average performance in older or smaller models, the gains must be balanced against increased response times and potential decreases in perfect accuracy due to variability in answers.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"For dedicated reasoning models, the added benefits of CoT appear negligible and may not justify the processing time increase.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+supports these findings.,"(LLM)
+ 
+to
+ 
+""think
+ 
+step
+ 
+by
+ 
+step""
+ 
+(Wei
+ 
+et
+ 
+al.,
+ 
+2022).
+ 
+CoT
+ 
+is
+ 
+a
+ 
+widely
+ 
+adopted
+ 
+method
+ 
+for
+ 
+improving
+ 
+reasoning
+ 
+tasks,
+ 
+however,
+ 
+our
+ 
+findings
+ 
+reveal
+ 
+a
+ 
+more
+ 
+nuanced
+ 
+picture
+ 
+of
+ 
+its
+ 
+effectiveness.
+ 
+We
+ 
+demonstrate
+ 
+two
+ 
+things:
+ 
+●
+ 
+The
+ 
+effectiveness
+ 
+of
+ 
+Chain-of-Thought
+ 
+prompting
+ 
+can
+ 
+vary
+ 
+greatly
+ 
+depending
+ 
+on
+ 
+the
+ 
+type
+ 
+of
+ 
+task
+ 
+and
+ 
+model.
+ 
+For
+ 
+non-reasoning
+ 
+models,
+ 
+CoT
+ 
+generally
+ 
+improves
+ 
+average
+ 
+performance
+ 
+by
+ 
+a
+ 
+small
+ 
+amount,
+ 
+particularly
+ 
+if
+ 
+the
+ 
+model
+ 
+does
+ 
+not
+ 
+inherently
+ 
+engage
+ 
+in
+ 
+step-by-step
+ 
+processing
+ 
+by
+ 
+default.
+ 
+However,
+ 
+CoT
+ 
+can
+ 
+introduce
+ 
+more
+ 
+variability
+ 
+in
+ 
+answers,
+ 
+sometimes
+ 
+triggering
+ 
+occasional
+ 
+errors
+ 
+in
+ 
+questions
+ 
+the
+ 
+model
+ 
+would
+ 
+otherwise
+ 
+get
+ 
+right.
+ 
+We
+ 
+also
+ 
+found
+ 
+that
+ 
+many
+ 
+recent
+ 
+models
+ 
+perform
+ 
+some
+ 
+form
+ 
+of
+ 
+CoT
+ 
+reasoning
+ 
+even
+ 
+if
+ 
+not
+ 
+asked
+ 
+(see
+ 
+Table",S15.pdf,S15-3e707ce8-2c53-4dc1-a27f-36d31673c69a-sec-2,0.540,
+"The performance improvements in citation quality for standard RAG architectures versus the Agent-based citation approach in S25 are contrasted as follows:  
+
+1.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"**Standard RAG Architectures**:  
+   - Standard RAG systems (e.g., those using retrieval-augmented LMs) face limitations in synthesizing multiple documents and properly citing them.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"As noted in the context, these systems struggle to integrate retrieved documents effectively, leading to lower citation quality.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"For example, Gao et al.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"(2023) highlight that standard RAG architectures fail to consider all relevant documents in their answers, resulting in low-efficiency human evaluations .","outputs . We re - use the ALCE example ( Gao et al . 2023 ) . Case # 1 shows that the LLM fails to consider the document [ 2 ] in its generated answer . Case # 2 exhibits that the LLM misses citing the doc - ument [ 3 ] . and the citation quality in these scenarios , which instead calls for low - efficiency and high - cost human evaluations ( Liu , Zhang , and Liang 2023 ) . Motivated by the above fact , Gao et al . ( 2023 ) propose the first reproducible benchmark , ALCE , to automatically evaluate LLMs ’ generations with citations . ALCE consists of three datasets and defines three automatic evaluation metrics , i . e . , Fluency , Correctness , and Citation Quality . Unlike those search engine - based studies , ALCE assumes natural - language questions paired with rel - evant retrieval corpora , which necessitates comprehensive systems to generate answers to questions using retrieved documents , as well as properly cite these documents . A se - ries of LLMs , e . g . , ChatGPT , LLaMA ( Touvron et al . 2023 ) , Vicuna ( Chiang et al . 2023 ) , and Oasst ( K ¨ opf et al . 2023 ) , have shown their exceptional abilities on ALCE . However , they still expose several limitations . One of the primary lim - itations lies in that they struggle to synthesize multiple doc - uments in context and properly cite them ( Gao et al . 2023 ) , The Thirty - Eighth AAAI Conference on Artiﬁcial Intelligence ( AAAI - 24 ) 18345",S10.pdf,S10-83180b6f-76d5-45b6-b6b3-b1b7d3aef742-tok-2,0.562,
+"**Agent-based Citation Approach**:  
+   - The Agent-based approach, as proposed in the context, addresses these limitations by enabling more seamless integration of retrieved documents and improving citation synthesis.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"This approach allows LLMs to synthesize multiple sources effectively, ensuring proper citations and higher citation quality.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
+"The ALCE benchmark, which evaluates such systems, demonstrates that Agent-based approaches can achieve better performance than standard RAG architectures .","8 Conclusion
+We propose ALCE, the first automatic benchmark
+for evaluating LLM generations with citations. We
+deploy automatic metrics to measure fluency, cor-
+rectness, and citation quality, and verify their effi-
+cacy via human evaluation. We explore a variety of
+strategies for incorporating citations in LLMs and
+demonstrate that current systems have considerable
+room for improvement on ALCE.
+Our experiments highlight a number of promis-
+ing research directions, including (1) enhancing re-
+trieval and refining retrieval integrations in LLMs,
+(2) developing long-context LLMs, and (3) advanc-
+ing LLMs’ ability to synthesize multiple sources.
+What’s even more intriguing is that these research
+proposals extend beyond the ALCE setup (for ex-
+ample, long-context LLMs have numerous exciting
+applications), and ALCE can serve as a valuable
+testbed for their development.",S07.pdf,S07-ebf1af3d-84fd-4845-ba1c-558cd5108fa1-sec-1,0.614,
+"Both approaches highlight the importance of retrieval strategies and citation synthesis, but the Agent-based method is explicitly designed to overcome the limitations of standard RAG systems.",⚠️ No citation provided,N/A,N/A,0.000,This claim has no supporting evidence cited. Consider rephrasing or asking a more specific question.
